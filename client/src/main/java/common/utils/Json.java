@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Json {
 
-    private static volatile ObjectMapper mapper = new ObjectMapper();
+    private static volatile ObjectMapper mapper = null;
 
 
     public static ObjectMapper getInstance(){

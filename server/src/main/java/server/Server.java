@@ -1,8 +1,9 @@
 package server;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.fasterxml.jackson.core.JsonParser;
+import common.utils.Json;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -13,14 +14,15 @@ public class Server {
     public static void start(String[] args){
         try {
             //Register server on input port
-            ServerSocket s = new ServerSocket(Integer.parseInt(args[0]));
-            Server.s = s;
+            Server.s = new ServerSocket(Integer.parseInt(args[0]));
 
-            Socket s1 = s.accept();
+            Socket s1 = Server.s.accept();
+            while (true){
+                InputStream s1In = s1.getInputStream();
+                Request request = Json.getInstance().readValue(s1In, Request.class);
+                System.out.println(request);
+            }
 
-            OutputStream s1out = s1.getOutputStream();
-            DataOutputStream dos = new DataOutputStream(s1out);
-            System.out.println(dos);
 
             //Close the connection, but not the server socket
 

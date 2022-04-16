@@ -1,4 +1,5 @@
 import Data.LocalSave;
+import server.Server;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -9,6 +10,7 @@ public class Application {
         LocalSave save = LocalSave.getInstance();
         ConcurrentHashMap<String, String> dictionary = save.readFromFile();
 
+        Server.start(args);
 
     }
 }
