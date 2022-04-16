@@ -6,8 +6,7 @@ import common.utils.Json;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LocalSave {
 
@@ -28,18 +27,18 @@ public class LocalSave {
         return LocalSave.localSave;
     }
 
-    public Map<String,String> readFromFile(){
+    public ConcurrentHashMap<String,String> readFromFile(){
         ObjectMapper mapper = Json.getMapper();
-        Map<String, String> dictionary = null;
+        ConcurrentHashMap<String, String> dictionary = null;
 
         //read the dictionary
         try {
             synchronized (key) {
-                dictionary = mapper.readValue(file, HashMap.class);
+                dictionary = mapper.readValue(file, ConcurrentHashMap.class);
             }
         }
         catch (FileNotFoundException e){
-            dictionary = new HashMap<>();
+            dictionary = new ConcurrentHashMap<>();
             System.out.println("Local save do not exist!");
         }
         catch (IOException e) {
@@ -49,7 +48,7 @@ public class LocalSave {
         return dictionary;
     }
 
-    public void saveToFile(Map<String, String> dictionary){
+    public void saveToFile(ConcurrentHashMap<String, String> dictionary){
         //sanity check
         if(dictionary == null){
             return;
@@ -57,8 +56,10 @@ public class LocalSave {
 
         //delete the local save if dictionary is empty
         synchronized (key) {
-            if(dictionary.isEmpty()){
-                file.delete();
+            if(dictionary.isEmpty() && file.exists()){
+                if(!file.delete()){
+                    System.out.println("Fail to delete the file");
+                }
                 return;
             }
         }
