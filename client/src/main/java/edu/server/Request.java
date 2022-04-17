@@ -1,6 +1,6 @@
-package server;
+package edu.server;
 
-import data.Word;
+import edu.data.Word;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

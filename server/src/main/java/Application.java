@@ -1,14 +1,22 @@
-import Data.LocalSave;
+import common.utils.Json;
+import data.Dictionary;
+import data.LocalSave;
+import data.Meanings;
+import data.Word;
 import server.Server;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
+        //initialize the dictionary
         LocalSave.initialize(args[1]);
         LocalSave save = LocalSave.getInstance();
-        ConcurrentHashMap<String, String> dictionary = save.readFromFile();
+        ConcurrentHashMap<String, Meanings> dictionary = save.readFromFile();
+        Dictionary.initialize(dictionary);
 
         Server.start(args);
 
