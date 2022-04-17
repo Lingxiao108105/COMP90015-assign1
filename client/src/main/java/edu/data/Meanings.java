@@ -4,171 +4,51 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Meanings {
 
-    private String noun;
-    private String verb;
-    private String participle;
-    private String article;
-    private String pronoun;
-    private String preposition;
-    private String adverb;
-    private String conjunction;
+    private HashMap<String,String> meaningMap = null;
 
     @JsonCreator
-    public Meanings(@JsonProperty("noun")String noun,
-                    @JsonProperty("verb")String verb,
-                    @JsonProperty("participle")String participle,
-                    @JsonProperty("article")String article,
-                    @JsonProperty("pronoun")String pronoun,
-                    @JsonProperty("preposition")String preposition,
-                    @JsonProperty("adverb")String adverb,
-                    @JsonProperty("conjunction")String conjunction) {
-        this.noun = noun;
-        this.verb = verb;
-        this.participle = participle;
-        this.article = article;
-        this.pronoun = pronoun;
-        this.preposition = preposition;
-        this.adverb = adverb;
-        this.conjunction = conjunction;
+    public Meanings(@JsonProperty("meaningMap")HashMap meaningMap) {
+        this.meaningMap = meaningMap;
     }
 
     //merge new meanings into old meanings, will replace old meanings
     public void merge(Meanings newMeanings){
-        if(newMeanings.noun != null){
-            this.noun = newMeanings.noun;
+        //sanity check
+        if(newMeanings == null || newMeanings.meaningMap == null){
+            return;
         }
-        if(newMeanings.verb != null){
-            this.verb = newMeanings.verb;
+        if(this.meaningMap == null){
+            return;
         }
-        if(newMeanings.participle != null){
-            this.participle = newMeanings.participle;
-        }
-        if(newMeanings.article != null){
-            this.article = newMeanings.article;
-        }
-        if(newMeanings.pronoun != null){
-            this.pronoun = newMeanings.pronoun;
-        }
-        if(newMeanings.preposition != null){
-            this.preposition = newMeanings.preposition;
-        }
-        if(newMeanings.adverb != null){
-            this.adverb = newMeanings.adverb;
-        }
-        if(newMeanings.conjunction != null){
-            this.conjunction = newMeanings.conjunction;
+        if(this.meaningMap.isEmpty()){
+            this.meaningMap = newMeanings.getMeaningMap();
+            return;
         }
 
-    }
-
-    public List<String> toList(){
-        List<String> all = new ArrayList<>();
-        if(this.noun != null){
-            all.add("noun: " + noun);
+        //merge new
+        HashMap<String,String> newMap = newMeanings.getMeaningMap();
+        for(String key: newMap.keySet()){
+            this.getMeaningMap().put(key,newMap.get(key));
         }
-        if(this.verb != null){
-            all.add("verb: " + verb);
-        }
-        if(this.participle != null){
-            all.add("participle: " + participle);
-        }
-        if(this.article != null){
-            all.add("article: " + article);
-        }
-        if(this.pronoun != null){
-            all.add("pronoun: " + preposition);
-        }
-        if(this.preposition != null){
-            all.add("preposition: " + preposition);
-        }
-        if(this.adverb != null){
-            all.add("adverb: " + adverb);
-        }
-        if(this.conjunction != null){
-            all.add("conjunction: " + conjunction);
-        }
-        return all;
     }
 
-    public String getNoun() {
-        return noun;
+    public HashMap<String, String> getMeaningMap() {
+        return meaningMap;
     }
 
-    public void setNoun(String noun) {
-        this.noun = noun;
-    }
-
-    public String getVerb() {
-        return verb;
-    }
-
-    public void setVerb(String verb) {
-        this.verb = verb;
-    }
-
-    public String getParticiple() {
-        return participle;
-    }
-
-    public void setParticiple(String participle) {
-        this.participle = participle;
-    }
-
-    public String getArticle() {
-        return article;
-    }
-
-    public void setArticle(String article) {
-        this.article = article;
-    }
-
-    public String getPronoun() {
-        return pronoun;
-    }
-
-    public void setPronoun(String pronoun) {
-        this.pronoun = pronoun;
-    }
-
-    public String getPreposition() {
-        return preposition;
-    }
-
-    public void setPreposition(String preposition) {
-        this.preposition = preposition;
-    }
-
-    public String getAdverb() {
-        return adverb;
-    }
-
-    public void setAdverb(String adverb) {
-        this.adverb = adverb;
-    }
-
-    public String getConjunction() {
-        return conjunction;
-    }
-
-    public void setConjunction(String conjunction) {
-        this.conjunction = conjunction;
+    public void setMeaningMap(HashMap<String, String> meaningMap) {
+        this.meaningMap = meaningMap;
     }
 
     @Override
     public String toString() {
         return "Meanings{" +
-                "noun='" + noun + '\'' +
-                ", verb='" + verb + '\'' +
-                ", participle='" + participle + '\'' +
-                ", article='" + article + '\'' +
-                ", pronoun='" + pronoun + '\'' +
-                ", preposition='" + preposition + '\'' +
-                ", adverb='" + adverb + '\'' +
-                ", conjunction='" + conjunction + '\'' +
+                "meaningMap=" + meaningMap +
                 '}';
     }
 }

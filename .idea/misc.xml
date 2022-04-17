@@ -5,7 +5,6 @@
       <list>
         <option value="$PROJECT_DIR$/server/pom.xml" />
         <option value="$PROJECT_DIR$/client/pom.xml" />
-        <option value="$PROJECT_DIR$/demo/pom.xml" />
         <option value="$PROJECT_DIR$/testClient/pom.xml" />
       </list>
     </option>

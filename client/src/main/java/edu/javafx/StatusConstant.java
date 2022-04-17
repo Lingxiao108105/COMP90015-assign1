@@ -17,6 +17,10 @@ public class StatusConstant {
     public static final String UPDATE = "Updating";
 
     public static final String EMPTY_OR_BLANK_INPUT = "Search word cannot be blank or empty!";
+    public static final String BLANK_POS_ROW = "part of speech cannot be blank or empty!";
+    public static final String BLANK_MEANING_ROW = "part of speech cannot be blank or empty!";
+    public static final String DUPLICATED_POS = "Same part of speech already exists!";
+    public static final String EMPTY_MEANING_TABLE = "Please add some meanings to this word!";
 
     public static Color colorByStatus(Status status){
         if(status.equals(Status.DUPLICATE)){
@@ -32,6 +36,9 @@ public class StatusConstant {
             return OK;
         }
         if(status.equals(Status.NOTFOUND)){
+            return WARNING;
+        }
+        if(status.equals(Status.EMPTY_MEANING)){
             return WARNING;
         }
         return ERROR;

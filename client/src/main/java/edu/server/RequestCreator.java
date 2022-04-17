@@ -9,8 +9,8 @@ public class RequestCreator {
         return new Request(0,RequestType.QUERY, new Word(spell,null));
     }
 
-    public static Request AddRequest(String spell){
-        return new Request(0,RequestType.ADD, new Word(spell,null));
+    public static Request AddRequest(String spell, Meanings meaning){
+        return new Request(0,RequestType.ADD, new Word(spell,meaning));
     }
 
     public static Request RemoveRequest(String spell){
@@ -20,4 +20,5 @@ public class RequestCreator {
     public static Request UpdateRequest(String spell, Meanings meaning){
         return new Request(0,RequestType.UPDATE, new Word(spell,meaning));
     }
+
 }

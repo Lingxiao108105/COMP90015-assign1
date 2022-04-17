@@ -40,6 +40,9 @@ public class Dictionary {
         if(map.containsKey(word.getSpell())){
             return Status.DUPLICATE;
         }
+        if(word.getMeanings() == null || word.getMeanings().getMeaningMap().isEmpty()){
+            return Status.EMPTY_MEANING;
+        }
         synchronized (key) {
             map.put(word.getSpell(),word.getMeanings());
             LocalSave.getInstance().saveToFile(map);
@@ -61,10 +64,13 @@ public class Dictionary {
     }
 
     public Status update(Word word){
+        //sanity check
+        if(word.getMeanings() == null || word.getMeanings().getMeaningMap().isEmpty()){
+            return Status.EMPTY_MEANING;
+        }
         synchronized (key) {
             if(map.containsKey(word.getSpell())){
-                Meanings oldMeaning = map.get(word.getSpell());
-                oldMeaning.merge(word.getMeanings());
+                map.replace(word.getSpell(),word.getMeanings());
                 LocalSave.getInstance().saveToFile(map);
                 return Status.SUCCESS;
             }

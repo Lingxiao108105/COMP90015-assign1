@@ -13,15 +13,20 @@
       <AnchorPane prefHeight="89.0" prefWidth="1055.0">
          <children>
             <Button fx:id="searchButton" layoutX="976.0" layoutY="10.0" mnemonicParsing="false" onAction="#query" prefHeight="31.0" prefWidth="77.0" text="Search" textAlignment="CENTER" />
-            <TextField fx:id="searchTestField" layoutX="14.0" layoutY="10.0" prefHeight="31.0" prefWidth="950.0" />
+            <TextField fx:id="searchTestField" layoutX="14.0" layoutY="10.0" onKeyPressed="#KeyPressedSearchTestField" prefHeight="31.0" prefWidth="950.0" />
             <Label fx:id="status" layoutX="14.0" layoutY="40.0" />
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="647.0" prefWidth="1055.0">
          <children>
             <Button fx:id="removeButton" layoutX="978.0" layoutY="6.0" mnemonicParsing="false" onAction="#remove" prefHeight="31.0" prefWidth="77.0" text="Remove" textAlignment="CENTER" />
-            <ListView fx:id="meaningView" layoutX="14.0" layoutY="-10.0" prefHeight="613.0" prefWidth="950.0" />
             <Button fx:id="editButton" layoutX="978.0" layoutY="47.0" mnemonicParsing="false" onAction="#toEditMode" prefHeight="31.0" prefWidth="77.0" text="Edit" textAlignment="CENTER" />
+            <TableView fx:id="meaningTable" layoutX="14.0" layoutY="-10.0" prefHeight="613.0" prefWidth="950.0">
+              <columns>
+                <TableColumn fx:id="POSColumn" editable="false" prefWidth="126.0" text="Part of speech" />
+                <TableColumn fx:id="meaningColumn" editable="false" prefWidth="823.0" text="Meaning" />
+              </columns>
+            </TableView>
          </children>
       </AnchorPane>
    </children>

@@ -1,13 +1,14 @@
 package edu;
 
+import edu.javafx.SearchGUIController;
 import edu.server.Client;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.io.IOException;
 
 public class DictionaryClient extends Application {
+
+    public static Client client = null;
 
     public static void main(String[] args){
         launch();
@@ -22,15 +23,10 @@ public class DictionaryClient extends Application {
     @Override
     public void start(Stage stage) {
 
-        new Client().start();
+        client = new Client();
+        client.start();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(DictionaryClient.class.getResource("search.fxml"));
-        Scene scene = null;
-        try {
-            scene = new Scene(fxmlLoader.load(), 1095.0, 746.0);
-        } catch (IOException e) {
-            System.out.println("Fail to load the scene from search.fxml");
-        }
+        Scene scene = SearchGUIController.getScene();
         stage.setTitle("Dictionary");
         stage.setScene(scene);
         stage.setResizable(false);
@@ -40,5 +36,6 @@ public class DictionaryClient extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
+        client.interrupt();
     }
 }

@@ -5,6 +5,8 @@ import edu.common.enums.Status;
 import edu.server.*;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,21 +15,26 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import static edu.javafx.StatusConstant.*;
 
 public class SearchGUIController implements Initializable {
 
-    @FXML
-    private Button searchButton;
+    private static Scene scene = null;
 
     @FXML
-    private ListView<String> meaningView;
+    private Button searchButton;
 
     @FXML
     private Button editButton;
@@ -39,30 +46,96 @@ public class SearchGUIController implements Initializable {
     private TextField searchTestField;
 
     @FXML
+    private TableView<Map.Entry<String, String>> meaningTable;
+
+    @FXML
+    private TableColumn<Map.Entry<String, String>, String> meaningColumn;
+
+    @FXML
+    private TableColumn<Map.Entry<String, String>, String> POSColumn;
+
+    @FXML
     private Label status;
+
+    public static Scene getScene(){
+        if(SearchGUIController.scene == null) {
+            FXMLLoader fxmlLoader = new FXMLLoader(DictionaryClient.class.getResource("search.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(fxmlLoader.load(), 1095.0, 746.0);
+            } catch (IOException e) {
+                System.out.println("Fail to load the scene from search.fxml");
+            }
+            SearchGUIController.scene = scene;
+        }
+        return SearchGUIController.scene;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //https://stackoverflow.com/questions/53493111/javafx-wrapping-text-in-listview
-        //Wrapping text in ListView
-        meaningView.setCellFactory(param -> new ListCell<String>(){
+        meaningTable.setPlaceholder(
+                new Label("No meaning to display"));
+
+        //adopt from https://stackoverflow.com/questions/18618653/binding-hashmap-with-tableview-javafx
+        POSColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item==null) {
-                    setGraphic(null);
-                    setText(null);
-                }else{
-                    // set the width's
-                    setMinWidth(param.getWidth());
-                    setMaxWidth(param.getWidth());
-                    setPrefWidth(param.getWidth());
-                    // allow wrapping
-                    setWrapText(true);
-                    setText(item.toString());
-                }
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
+                // for first column we use key
+                return new SimpleStringProperty(p.getValue().getKey());
             }
         });
+        meaningColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
+                // for second column we use value
+                return new SimpleStringProperty(p.getValue().getValue());
+            }
+        });
+
+        //adopt from https://stackoverflow.com/questions/22732013/javafx-tablecolumn-text-wrapping
+        POSColumn.setCellFactory(param -> {
+            return new TableCell<Map.Entry<String, String>, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        Text text = new Text(item);
+                        text.setStyle("-fx-text-alignment:justify;");
+                        text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
+                        setGraphic(text);
+                    }
+                }
+            };
+        });
+        meaningColumn.setCellFactory(param -> {
+            return new TableCell<Map.Entry<String, String>, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        Text text = new Text(item);
+                        text.setStyle("-fx-text-alignment:justify;");
+                        text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
+                        setGraphic(text);
+                    }
+                }
+            };
+        });
+    }
+
+    @FXML
+    void KeyPressedSearchTestField(KeyEvent event){
+        if(event.getCode() == KeyCode.ENTER) {
+            query(null);
+        }
     }
 
     @FXML
@@ -108,15 +181,16 @@ public class SearchGUIController implements Initializable {
             status.setTextFill(StatusConstant.colorByStatus(response.getStatus()));
 
             //show the meaning
-            if(response.getWord().getMeanings() == null){
-                meaningView.setItems(null);
+            if(response.getWord().getMeanings() == null
+                    || response.getWord().getMeanings().getMeaningMap() == null
+                    || response.getWord().getMeanings().getMeaningMap().isEmpty()){
+                //empty the table
+                meaningTable.getItems().clear();
                 return;
             }
-            searchTestField.setText(response.getWord().getSpell());
-            ObservableList<String> meanings = FXCollections.observableArrayList(
-                    response.getWord().getMeanings().toList());
-            meaningView.setItems(meanings);
-
+            HashMap<String,String> meaningMap = response.getWord().getMeanings().getMeaningMap();
+            ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList(meaningMap.entrySet());
+            meaningTable.setItems(items);
 
         });
 
@@ -165,7 +239,8 @@ public class SearchGUIController implements Initializable {
             status.setText(response.getStatus().toString());
             status.setTextFill(StatusConstant.colorByStatus(response.getStatus()));
 
-
+            //empty the table
+            meaningTable.getItems().clear();
 
         });
 
@@ -173,13 +248,7 @@ public class SearchGUIController implements Initializable {
 
     @FXML
     void toEditMode(ActionEvent event) {
-        FXMLLoader fxmlLoader = new FXMLLoader(DictionaryClient.class.getResource("edit.fxml"));
-        Scene scene = null;
-        try {
-            scene = new Scene(fxmlLoader.load(), 1095.0, 746.0);
-        } catch (IOException e) {
-            System.out.println("Fail to load the scene from edit.fxml");
-        }
+        Scene scene = EditGUIController.getScene();
         if(scene != null){
             Stage stage = (Stage) editButton.getScene().getWindow();
             stage.setScene(scene);

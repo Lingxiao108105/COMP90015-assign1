@@ -1,6 +1,13 @@
 package edu.server;
 
+import edu.DictionaryClient;
 import edu.common.utils.Json;
+import edu.javafx.ReconnectGUIController;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +16,7 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 public class Client extends Thread {
 
@@ -26,6 +34,18 @@ public class Client extends Thread {
     public Client(String ip, Integer port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public Socket getS1() {
+        return s1;
     }
 
     public static void enqueueRequest(Request request){
@@ -75,14 +95,21 @@ public class Client extends Thread {
 
 
         while (true){
+            //end the thread
+            if(Thread.currentThread().isInterrupted()){
+                closeSocket(s1,inputStream,outputStream);
+                System.out.println(Thread.currentThread().getName() + " is stop! ");
+                return;
+            }
             Request request = null;
             try {
                 request = Client.queue.take();
             } catch (InterruptedException e) {
-                System.out.println("Fail to take request from queue!");
-                continue;
-//                e.printStackTrace();
+                closeSocket(s1,inputStream,outputStream);
+                System.out.println(Thread.currentThread().getName() + " is stop! ");
+                return;
             }
+            //normal request
             Client.logicalTime++;
             request.setLogicalTime(Client.logicalTime);
             try {
@@ -97,7 +124,7 @@ public class Client extends Thread {
                 responseMap.put(request,response);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 closeSocket(s1,inputStream,outputStream);
                 connectToNewServer();
                 return;
@@ -107,10 +134,34 @@ public class Client extends Thread {
     }
 
     private void connectToNewServer(){
-
+        //start reconnect GUI
+        if(ReconnectGUIController.stage == null){
+            Platform.runLater(() ->{
+                FXMLLoader fxmlLoader = new FXMLLoader(DictionaryClient.class.getResource("reconnect.fxml"));
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 514.0, 295.0);
+                } catch (IOException e) {
+                    System.out.println("Fail to load the scene from reconnect.fxml");
+                    Thread.currentThread().interrupt();
+                }
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+                ReconnectGUIController.stage = stage;
+            });
+        } else {
+            Platform.runLater(() ->{
+                ReconnectGUIController.stage.show();
+            });
+        }
     }
 
     private void closeSocket(Socket s1, InputStream s1in, OutputStream s1out){
+        if(s1 == null){
+            return;
+        }
         String remoteSocketAddress = s1.getRemoteSocketAddress().toString();
         try {
             if(s1in != null){
