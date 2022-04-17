@@ -1,4 +1,4 @@
-package common.utils;
+package edu.common.utils;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,11 +47,8 @@ public class CustomThreadPool {
 
     private class Worker extends Thread{
 
-
-        private int id;
         public Worker(int id) {
             //set id
-            this.id = id;
             Thread.currentThread().setName(Integer.toString(id));
         }
 
@@ -63,8 +60,8 @@ public class CustomThreadPool {
                     Runnable task = queue.poll(10, TimeUnit.SECONDS);
                     //not enough task to run
                     if(task == null){
-                        System.out.println(Thread.currentThread().getName() + " is interrupted due to timeout!");
-                        workers.remove(this.id);
+                        System.out.println(Thread.currentThread().getName() + "is interrupted!");
+                        workers.remove(Integer.parseInt(Thread.currentThread().getName()));
                         this.interrupt();
                         break;
                     }
@@ -72,9 +69,9 @@ public class CustomThreadPool {
                 }
             }
             catch (InterruptedException e){
-                System.out.println(Thread.currentThread().getName() + " is interrupted!");
+                System.out.println(Thread.currentThread().getName() + "is interrupted!");
                 //remove it from the thread pool
-                workers.remove(this.id);
+                workers.remove(Integer.parseInt(Thread.currentThread().getName()));
             }
         }
     }

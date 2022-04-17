@@ -1,8 +1,9 @@
 package edu;
 
+import edu.data.Meanings;
 import edu.data.Word;
-import com.fasterxml.jackson.core.JsonParser;
 import edu.common.utils.Json;
+import edu.server.Response;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,29 +12,30 @@ import edu.server.Request;
 import edu.server.RequestType;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
 public class DictionaryClient extends Application {
 
     public static void main(String[] args) throws IOException {
-
         launch();
 
-        Socket s1 = new Socket(args[0], Integer.parseInt(args[1]));
+        Socket s1 = new Socket("127.0.0.1" , 10000);
 
         OutputStream s1out = s1.getOutputStream();
-        Request request = new Request(1, RequestType.ADD,new Word("hello","greetings"));
-        while (true){
-            Json.getInstance().configure(JsonParser.Feature.AUTO_CLOSE_SOURCE,false);
-            Json.getInstance().writeValue(s1out,request);
-            try {
-                Thread.currentThread().sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        InputStream s1in = s1.getInputStream();
+        Meanings meanings = new Meanings(null, "greetings", null, null, null, null, null, null);
+        Request request = new Request(1, RequestType.ADD,new Word("hello",meanings));
+        Json.getInstance().writeValue(s1out,request);
+        Response response = Json.getInstance().readValue(s1in, Response.class);
+        System.out.println(response);
 
+        Json.getInstance().writeValue(s1out,request);
+        response = Json.getInstance().readValue(s1in, Response.class);
+        System.out.println(response);
+
+        s1.close();
     }
 
     @Override

@@ -30,6 +30,7 @@ public class RequestHandler implements Runnable{
             inputStream = s1.getInputStream();
             outputStream = s1.getOutputStream();
         } catch (IOException e) {
+            System.out.println("Fail to open IO stream!");
             closeSocket(s1);
             return;
         }
@@ -74,7 +75,10 @@ public class RequestHandler implements Runnable{
             try {
                 Json.getInstance().writeValue(outputStream,response);
             } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Fail to response to " + s1.getRemoteSocketAddress());
                 closeSocket(s1);
+                System.out.flush();
                 return;
             }
         }
@@ -122,9 +126,9 @@ public class RequestHandler implements Runnable{
         try {
             s1.close();
         } catch (IOException ex) {
-            System.out.println("Fail to close" + remoteSocketAddress);
+            System.out.println("Fail to close " + remoteSocketAddress);
         }
-        System.out.println(remoteSocketAddress + "is closed");
+        System.out.println(remoteSocketAddress + " is closed");
     }
 
     @Override

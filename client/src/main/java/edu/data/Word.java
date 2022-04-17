@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Word {
 
     private String spell;
-    private String meaning;
+    private Meanings meanings;
 
     @JsonCreator
     public Word(@JsonProperty("spell")String spell,
-                @JsonProperty("meaning")String meaning) {
+                @JsonProperty("meanings")Meanings meanings) {
         this.spell = spell;
-        this.meaning = meaning;
+        this.meanings = meanings;
     }
 
     public String getSpell() {
@@ -23,19 +23,19 @@ public class Word {
         this.spell = spell;
     }
 
-    public String getMeaning() {
-        return meaning;
+    public Meanings getMeanings() {
+        return meanings;
     }
 
-    public void setMeaning(String meaning) {
-        this.meaning = meaning;
+    public void setMeanings(Meanings meanings) {
+        this.meanings = meanings;
     }
 
     @Override
     public String toString() {
         return "Word{" +
                 "spell='" + spell + '\'' +
-                ", meaning='" + meaning + '\'' +
+                ", meanings=" + meanings +
                 '}';
     }
 }

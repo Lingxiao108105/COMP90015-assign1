@@ -9,12 +9,14 @@
         <module name="server" />
         <module name="client" />
         <module name="demo" />
+        <module name="testClient" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17">
       <module name="client" target="17" />
       <module name="demo" target="18" />
       <module name="server" target="17" />
+      <module name="testClient" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
