@@ -10,4 +10,10 @@ module DictionaryClient {
 
     // export Application subclass's package
     exports edu;
+    exports edu.common.enums;
+    exports edu.common.utils;
+    exports edu.data;
+    exports edu.javafx;
+    exports edu.server;
+
 }

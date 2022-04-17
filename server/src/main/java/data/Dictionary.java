@@ -27,6 +27,8 @@ public class Dictionary {
 
     public Status query(Word word){
         word.setMeanings(null);
+        System.out.println(map.get(word.getSpell()));
+
         word.setMeanings(map.get(word.getSpell()));
         if(word.getMeanings() == null){
             return Status.NOTFOUND;

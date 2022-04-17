@@ -31,21 +31,28 @@ public class RequestHandler implements Runnable{
             outputStream = s1.getOutputStream();
         } catch (IOException e) {
             System.out.println("Fail to open IO stream!");
-            closeSocket(s1);
+            closeSocket(s1,inputStream,outputStream);
             return;
         }
 
         while (true){
+
+            if(Thread.currentThread().isInterrupted()){
+                closeSocket(s1,inputStream,outputStream);
+                break;
+            }
+
             Request request = null;
             try {
                 request = Json.getInstance().readValue(inputStream, Request.class);
+                System.out.println("Get request: " + request);
             } catch (IOException e) {
                 //response with msg invalid request
                 Response response = invalidRequest();
                 try {
                     Json.getInstance().writeValue(outputStream,response);
                 } catch (IOException ex) {
-                    closeSocket(s1);
+                    closeSocket(s1,inputStream,outputStream);
                     return;
                 }
                 continue;
@@ -77,7 +84,7 @@ public class RequestHandler implements Runnable{
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Fail to response to " + s1.getRemoteSocketAddress());
-                closeSocket(s1);
+                closeSocket(s1,inputStream,outputStream);
                 System.out.flush();
                 return;
             }
@@ -121,9 +128,15 @@ public class RequestHandler implements Runnable{
         return new Response(request.getLogicalTime(),Status.INVALID_REQUEST_TYPE,request.getWord());
     }
 
-    private void closeSocket(Socket s1){
+    private void closeSocket(Socket s1, InputStream s1in, OutputStream s1out){
         String remoteSocketAddress = s1.getRemoteSocketAddress().toString();
         try {
+            if(s1in != null){
+                s1in.close();
+            }
+            if(s1out != null){
+                s1out.close();
+            }
             s1.close();
         } catch (IOException ex) {
             System.out.println("Fail to close " + remoteSocketAddress);

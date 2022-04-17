@@ -1,5 +1,6 @@
 package data;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.utils.Json;
 
@@ -34,7 +35,7 @@ public class LocalSave {
         //read the dictionary
         try {
             synchronized (key) {
-                dictionary = mapper.readValue(file, ConcurrentHashMap.class);
+                dictionary = mapper.readValue(file, new TypeReference<ConcurrentHashMap<String,Meanings>>(){});
             }
         }
         catch (FileNotFoundException e){

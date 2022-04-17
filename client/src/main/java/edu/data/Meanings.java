@@ -3,6 +3,9 @@ package edu.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Meanings {
 
     private String noun;
@@ -60,6 +63,35 @@ public class Meanings {
             this.conjunction = newMeanings.conjunction;
         }
 
+    }
+
+    public List<String> toList(){
+        List<String> all = new ArrayList<>();
+        if(this.noun != null){
+            all.add("noun: " + noun);
+        }
+        if(this.verb != null){
+            all.add("verb: " + verb);
+        }
+        if(this.participle != null){
+            all.add("participle: " + participle);
+        }
+        if(this.article != null){
+            all.add("article: " + article);
+        }
+        if(this.pronoun != null){
+            all.add("pronoun: " + preposition);
+        }
+        if(this.preposition != null){
+            all.add("preposition: " + preposition);
+        }
+        if(this.adverb != null){
+            all.add("adverb: " + adverb);
+        }
+        if(this.conjunction != null){
+            all.add("conjunction: " + conjunction);
+        }
+        return all;
     }
 
     public String getNoun() {

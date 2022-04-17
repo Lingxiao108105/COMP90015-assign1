@@ -3,6 +3,8 @@ package data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Locale;
+
 public class Word {
 
     private String spell;
@@ -11,7 +13,7 @@ public class Word {
     @JsonCreator
     public Word(@JsonProperty("spell")String spell,
                 @JsonProperty("meanings")Meanings meanings) {
-        this.spell = spell;
+        this.spell = spell.toLowerCase();
         this.meanings = meanings;
     }
 
@@ -20,7 +22,7 @@ public class Word {
     }
 
     public void setSpell(String spell) {
-        this.spell = spell;
+        this.spell = spell.toLowerCase();
     }
 
     public Meanings getMeanings() {
