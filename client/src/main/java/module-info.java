@@ -1,4 +1,4 @@
-module DictionaryClient {
+module client {
     requires javafx.controls;
     requires javafx.fxml;
     requires com.fasterxml.jackson.core;
