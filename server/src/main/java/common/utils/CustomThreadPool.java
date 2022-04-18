@@ -33,18 +33,6 @@ public class CustomThreadPool {
         }
     }
 
-    public void shutDown() throws InterruptedException {
-        for(Worker worker: workers.values()){
-            worker.interrupt();
-        }
-
-        for(Worker worker: workers.values()){
-            worker.join();
-        }
-
-        System.out.println("All the workers are shut down!");
-    }
-
     private class Worker extends Thread{
 
 

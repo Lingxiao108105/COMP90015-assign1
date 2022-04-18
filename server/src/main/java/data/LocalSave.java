@@ -46,6 +46,7 @@ public class LocalSave {
             dictionary = new ConcurrentHashMap<>();
             System.out.println("Fail to read from file! Will start with an empty dictionary");
         }
+        saveToFile(dictionary);
         return dictionary;
     }
 
@@ -63,7 +64,8 @@ public class LocalSave {
             }
         }
         catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Fail to save to path: " + path);
+            System.out.println("Please enter valid path!");
             System.exit(-1);
         }
     }
