@@ -2,3 +2,5 @@ demo
 .idea
 dictionary.json
 testClient
+client/target
+server/target

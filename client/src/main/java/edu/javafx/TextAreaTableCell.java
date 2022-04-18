@@ -1,11 +1,8 @@
 package edu.javafx;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
@@ -42,11 +39,16 @@ public class TextAreaTableCell<S, T> extends TableCell<S, T> {
                 t.consume();
             }
             else if(t.getCode() == KeyCode.ENTER && t.isShiftDown()) {
-                t.consume();
                 textArea.insertText(textArea.getCaretPosition(), "\n");
             }
             else if(t.getCode() == KeyCode.ENTER) {
-                t.consume();
+                //consume the /n
+                String text = textArea.getText();
+                String front = text.substring(0,textArea.getCaretPosition()-1);
+                String end = text.substring(textArea.getCaretPosition());
+                textArea.setText(front+end);
+
+                //commit
                 if (converter == null) {
                     throw new IllegalStateException(
                             "Attempting to convert text input into Object, but provided "

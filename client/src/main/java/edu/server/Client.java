@@ -16,7 +16,6 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
 
 public class Client extends Thread {
 
@@ -74,12 +73,13 @@ public class Client extends Thread {
 
         try {
             this.s1 = new Socket(ip ,port);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("Fail to connect to server " + ip + ":" + port);
             closeSocket(s1,null,null);
             connectToNewServer();
             return;
         }
+
 
         InputStream inputStream = null;
         OutputStream outputStream = null;
@@ -123,7 +123,7 @@ public class Client extends Thread {
                 //save to responseMap
                 responseMap.put(request,response);
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 //e.printStackTrace();
                 closeSocket(s1,inputStream,outputStream);
                 connectToNewServer();

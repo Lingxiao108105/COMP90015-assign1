@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class Meaning {
 
-    String POS;
-    String meaning;
+    private String POS;
+    private String meaning;
 
     public Meaning(String POS, String meaning) {
         this.POS = POS;

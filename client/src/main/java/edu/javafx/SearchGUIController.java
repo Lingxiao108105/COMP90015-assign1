@@ -1,10 +1,8 @@
 package edu.javafx;
 
 import edu.DictionaryClient;
-import edu.common.enums.Status;
 import edu.server.*;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
