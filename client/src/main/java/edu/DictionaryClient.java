@@ -1,14 +1,17 @@
 package edu;
 
 import edu.javafx.SearchGUIController;
-import edu.server.Client;
+import edu.client.Client;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.List;
 
+/**
+ * start point of javafx GUI
+ * @author lingxiao li 1031146
+ */
 public class DictionaryClient extends Application {
 
     public static Client client = null;
@@ -34,7 +37,7 @@ public class DictionaryClient extends Application {
         }
         DictionaryClient.client.start();
 
-
+        //show search scene
         Scene scene = SearchGUIController.getScene();
         stage.setTitle("Dictionary");
         stage.setScene(scene);
@@ -42,6 +45,9 @@ public class DictionaryClient extends Application {
         stage.show();
     }
 
+    /**
+     * stop the javafx GUI
+     */
     @Override
     public void stop() throws Exception {
         super.stop();

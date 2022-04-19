@@ -1,7 +1,7 @@
 package edu.javafx;
 
 import edu.DictionaryClient;
-import edu.server.*;
+import edu.client.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -27,8 +27,14 @@ import java.util.ResourceBundle;
 
 import static edu.javafx.StatusConstant.*;
 
+/**
+ * controller for search scene
+ *
+ * @author lingxiao li 1031146
+ */
 public class SearchGUIController implements Initializable {
 
+    //search scene
     private static Scene scene = null;
 
     @FXML
@@ -55,6 +61,7 @@ public class SearchGUIController implements Initializable {
     @FXML
     private Label status;
 
+    //singleton of search scene
     public static Scene getScene(){
         if(SearchGUIController.scene == null) {
             FXMLLoader fxmlLoader = new FXMLLoader(DictionaryClient.class.getResource("search.fxml"));
@@ -69,6 +76,11 @@ public class SearchGUIController implements Initializable {
         return SearchGUIController.scene;
     }
 
+    /**
+     * initialize the meaning table
+     * @param url null
+     * @param resourceBundle null
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         meaningTable.setPlaceholder(
@@ -129,6 +141,10 @@ public class SearchGUIController implements Initializable {
         });
     }
 
+    /**
+     * query when press enter for search
+     * @param event key event
+     */
     @FXML
     void KeyPressedSearchTestField(KeyEvent event){
         if(event.getCode() == KeyCode.ENTER) {
@@ -136,21 +152,30 @@ public class SearchGUIController implements Initializable {
         }
     }
 
+    /**
+     * query the word when user press Search button
+     * @param event null
+     */
     @FXML
     void query(ActionEvent event) {
 
+        //set status label
         status.setText(RequestType.QUERY.toString());
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
+        //sanity check
         if(spell.isBlank() || spell.isEmpty()){
             status.setText(EMPTY_OR_BLANK_INPUT);
             status.setTextFill(WARNING);
             return;
         }
 
+        //query
         Request request = RequestCreator.QueryRequest(spell);
         Client.enqueueRequest(request);
+
+        //handle response
         Platform.runLater( () ->{
             handleQueryResponse(request);
         });
@@ -195,22 +220,30 @@ public class SearchGUIController implements Initializable {
 
     }
 
-
+    /**
+     * remove the word when user press Remove button
+     * @param event null
+     */
     @FXML
     void remove(ActionEvent event) {
 
+        //set status label
         status.setText(RequestType.REMOVE.toString());
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
+        //sanity check
         if(spell.isBlank() || spell.isEmpty()){
             status.setText(EMPTY_OR_BLANK_INPUT);
             status.setTextFill(WARNING);
             return;
         }
 
+        //remove
         Request request = RequestCreator.RemoveRequest(spell);
         Client.enqueueRequest(request);
+
+        //handle response
         Platform.runLater( () ->{
             handleRemoveResponse(request);
         });
@@ -246,6 +279,10 @@ public class SearchGUIController implements Initializable {
 
     }
 
+    /**
+     * change the scene to edit scene
+     * @param event null
+     */
     @FXML
     void toEditMode(ActionEvent event) {
         Scene scene = EditGUIController.getScene();

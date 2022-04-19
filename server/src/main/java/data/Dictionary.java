@@ -4,6 +4,12 @@ import common.enums.Status;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Dictionary
+ * contains all the words in a ConcurrentHashMap
+ *
+ * @author lingxiao li 1031146
+ */
 public class Dictionary {
 
     private static ConcurrentHashMap<String,Meanings> map = null;
@@ -24,10 +30,13 @@ public class Dictionary {
     }
 
 
+    /**
+     * query a word in the dictionary
+     * @param word word to search
+     * @return status of query
+     */
     public Status query(Word word){
         word.setMeanings(null);
-        System.out.println(map.get(word.getSpell()));
-
         word.setMeanings(map.get(word.getSpell()));
         if(word.getMeanings() == null){
             return Status.NOTFOUND;
@@ -35,6 +44,12 @@ public class Dictionary {
         return Status.SUCCESS;
     }
 
+    /**
+     * add a word to the dictionary
+     * will also store the dictionary to local file
+     * @param word word to add
+     * @return status of add
+     */
     public Status add(Word word){
         if(map.containsKey(word.getSpell())){
             return Status.DUPLICATE;
@@ -51,6 +66,12 @@ public class Dictionary {
 
     }
 
+    /**
+     * remove a word from the dictionary
+     * will also store the dictionary to local file
+     * @param word word to remove
+     * @return status of remove
+     */
     public Status remove(Word word){
         synchronized (key) {
             if(map.containsKey(word.getSpell())){
@@ -63,6 +84,12 @@ public class Dictionary {
 
     }
 
+    /**
+     * update a word in the dictionary
+     * will also store the dictionary to local file
+     * @param word word to update
+     * @return status of update
+     */
     public Status update(Word word){
         //sanity check
         if(word.getMeanings() == null || word.getMeanings().getMeaningMap().isEmpty()){

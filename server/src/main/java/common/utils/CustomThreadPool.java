@@ -6,10 +6,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author lingxiao li 1031146
- *
  * basic thread pool which will auto-reduce the thread pool when throughput is low
  *
+ * @author lingxiao li 1031146
  */
 public class CustomThreadPool {
 
@@ -18,6 +17,11 @@ public class CustomThreadPool {
     private Integer workerId = 1;
     private final static int maxWorkerCount = 100;
 
+    /**
+     * create worker if there are tasks in queue
+     * then add task to queue
+     * @param task task to excute
+     */
     public void execute(Runnable task) {
         if((queue.size() > 0 && workers.size() < maxWorkerCount) || workers.size() ==0){
             Worker worker = new Worker(workerId);
@@ -33,6 +37,10 @@ public class CustomThreadPool {
         }
     }
 
+    /**
+     * worker who run the work
+     * will interrupt if it does not receive task in 10 seconds
+     */
     private class Worker extends Thread{
 
 

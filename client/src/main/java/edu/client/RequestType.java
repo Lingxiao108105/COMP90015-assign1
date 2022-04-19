@@ -1,4 +1,4 @@
-package server;
+package edu.client;
 
 /**
  * all the valid request type

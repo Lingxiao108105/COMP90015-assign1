@@ -1,8 +1,13 @@
-package edu.server;
+package edu.client;
 
 import edu.data.Meanings;
 import edu.data.Word;
 
+/**
+ * utils for create requests
+ *
+ * @author lingxiao li 1031146
+ */
 public class RequestCreator {
 
     public static Request QueryRequest(String spell){

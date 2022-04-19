@@ -3,8 +3,11 @@ package data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Locale;
-
+/**
+ * contains spell and meanings of a word
+ *
+ * @author lingxiao li 1031146
+ */
 public class Word {
 
     private String spell;

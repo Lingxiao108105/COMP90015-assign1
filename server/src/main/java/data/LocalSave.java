@@ -11,7 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * save dictionary to file and read dictionary from file
- * @author lingxiao
+ *
+ * @author lingxiao li 1031146
  */
 public class LocalSave {
 

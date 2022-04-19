@@ -3,6 +3,11 @@ package edu.javafx;
 import edu.common.enums.Status;
 import javafx.scene.paint.Color;
 
+/**
+ * constants for status label in GUI
+ *
+ * @author lingxiao li 1031146
+ */
 public class StatusConstant {
 
     public static final Color OK = Color.GREEN;
@@ -22,6 +27,12 @@ public class StatusConstant {
     public static final String DUPLICATED_POS = "Same part of speech already exists!";
     public static final String EMPTY_MEANING_TABLE = "Please add some meanings to this word!";
 
+
+    /**
+     * return corresponding Color by status of the request
+     * @param status status of the request
+     * @return Color
+     */
     public static Color colorByStatus(Status status){
         if(status.equals(Status.DUPLICATE)){
             return WARNING;

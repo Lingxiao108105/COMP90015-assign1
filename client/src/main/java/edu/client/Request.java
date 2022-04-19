@@ -1,9 +1,14 @@
-package edu.server;
+package edu.client;
 
 import edu.data.Word;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * request
+ *
+ * @author lingxiao li 1031146
+ */
 public class Request {
 
     private int logicalTime;

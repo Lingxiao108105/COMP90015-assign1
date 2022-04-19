@@ -5,8 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 
+/**
+ * contain meanings of a word
+ *
+ * @author lingxiao li 1031146
+ */
 public class Meanings {
 
+    //meanings with <Part of Speech, meaning>
     private HashMap<String,String> meaningMap = null;
 
     @JsonCreator

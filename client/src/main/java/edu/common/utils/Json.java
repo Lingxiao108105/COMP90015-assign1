@@ -5,6 +5,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * configured json
+ * @author lingxiao li 1031146
+ */
 public class Json {
 
     private static volatile ObjectMapper mapper = null;

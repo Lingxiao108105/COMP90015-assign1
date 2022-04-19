@@ -1,10 +1,15 @@
-package edu.server;
+package edu.client;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.common.enums.Status;
 import edu.data.Word;
 
+/**
+ * response
+ *
+ * @author lingxiao li 1031146
+ */
 public class Response {
 
     private int logicalTime;

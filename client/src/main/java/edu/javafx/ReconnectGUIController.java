@@ -1,7 +1,7 @@
 package edu.javafx;
 
 import edu.DictionaryClient;
-import edu.server.Client;
+import edu.client.Client;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +13,11 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * controller for reconnection scene
+ *
+ * @author lingxiao li 1031146
+ */
 public class ReconnectGUIController implements Initializable {
 
     public static Stage stage = null;
@@ -29,6 +34,11 @@ public class ReconnectGUIController implements Initializable {
     @FXML
     private Button connectButton;
 
+    /**
+     * initialize the ip and port
+     * @param url null
+     * @param resourceBundle null
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set ip and port
@@ -37,6 +47,10 @@ public class ReconnectGUIController implements Initializable {
         port.setText(client.getPort().toString());
     }
 
+    /**
+     * try to connect to new server address
+     * @param event null
+     */
     @FXML
     void connect(ActionEvent event) {
         Client client = DictionaryClient.client;
@@ -47,6 +61,10 @@ public class ReconnectGUIController implements Initializable {
         ReconnectGUIController.stage.close();
     }
 
+    /**
+     * exit the whole program
+     * @param event null
+     */
     @FXML
     void exit(ActionEvent event) {
         Platform.exit();

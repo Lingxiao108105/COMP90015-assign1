@@ -1,4 +1,4 @@
-package edu.server;
+package edu.client;
 
 import edu.DictionaryClient;
 import edu.common.utils.Json;
@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
@@ -20,9 +19,15 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * Client to communicate with server
+ * @author lingxiao li 1031146
+ */
 public class Client extends Thread {
 
+    //request wait for processing
     private final static BlockingQueue<Request> queue = new LinkedBlockingDeque<>();
+    //received response
     private final static ConcurrentHashMap<Request,Response> responseMap = new ConcurrentHashMap<>();
     private static Integer logicalTime = 0;
 
@@ -50,6 +55,11 @@ public class Client extends Thread {
         return s1;
     }
 
+    /**
+     * clean request before and
+     * enqueue the request
+     * @param request request to enqueue
+     */
     public static void enqueueRequest(Request request){
         try {
             Client.queue.clear();
@@ -76,10 +86,14 @@ public class Client extends Thread {
     }
 
 
-
+    /**
+     * connect to socket and open IO stream
+     * then try to process request and receive response
+     */
     @Override
     public void run() {
 
+        //try to open socket
         try {
             this.s1 = new Socket(ip ,port);
         } catch (Exception e) {
@@ -89,7 +103,7 @@ public class Client extends Thread {
             return;
         }
 
-
+        //try to open IO stream
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
@@ -110,6 +124,7 @@ public class Client extends Thread {
                 System.out.println(Thread.currentThread().getName() + " is stop! ");
                 return;
             }
+            //take request
             Request request = null;
             try {
                 request = Client.queue.take();
@@ -142,6 +157,9 @@ public class Client extends Thread {
 
     }
 
+    /**
+     * show reconnection scene
+     */
     private void connectToNewServer(){
         //start reconnect GUI
         if(ReconnectGUIController.stage == null){
@@ -174,6 +192,12 @@ public class Client extends Thread {
         }
     }
 
+    /**
+     * close IO stream and socket
+     * @param s1 socket to close
+     * @param s1in InputStream
+     * @param s1out OutputStream
+     */
     private void closeSocket(Socket s1, InputStream s1in, OutputStream s1out){
         if(s1 == null){
             return;

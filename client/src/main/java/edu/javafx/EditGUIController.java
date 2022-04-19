@@ -2,7 +2,7 @@ package edu.javafx;
 
 import edu.DictionaryClient;
 import edu.data.Meaning;
-import edu.server.*;
+import edu.client.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,8 +28,14 @@ import java.util.ResourceBundle;
 import static edu.javafx.StatusConstant.*;
 import static edu.javafx.StatusConstant.WARNING;
 
+/**
+ * controller for edit scene
+ *
+ * @author lingxiao li 1031146
+ */
 public class EditGUIController implements Initializable {
 
+    //edit scene
     private static Scene scene = null;
 
     @FXML
@@ -74,6 +80,7 @@ public class EditGUIController implements Initializable {
     @FXML
     private Button removeRowButton;
 
+    //singleton of edit scene
     public static Scene getScene(){
         if(EditGUIController.scene == null) {
             FXMLLoader fxmlLoader = new FXMLLoader(DictionaryClient.class.getResource("edit.fxml"));
@@ -89,6 +96,11 @@ public class EditGUIController implements Initializable {
     }
 
 
+    /**
+     * initialize the meaning table
+     * @param url null
+     * @param resourceBundle null
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         meaningTable.setPlaceholder(
@@ -132,21 +144,30 @@ public class EditGUIController implements Initializable {
         });
     }
 
+    /**
+     * query the word when user press Search button
+     * @param event null
+     */
     @FXML
     void query(ActionEvent event) {
 
+        //set status label
         status.setText(RequestType.QUERY.toString());
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
+        //sanity check
         if(spell.isBlank() || spell.isEmpty()){
             status.setText(EMPTY_OR_BLANK_INPUT);
             status.setTextFill(WARNING);
             return;
         }
 
+        //query
         Request request = RequestCreator.QueryRequest(spell);
         Client.enqueueRequest(request);
+
+        //handle response
         Platform.runLater( () ->{
             handleQueryResponse(request);
         });
@@ -192,22 +213,30 @@ public class EditGUIController implements Initializable {
 
     }
 
-
+    /**
+     * remove the word when user press Remove button
+     * @param event null
+     */
     @FXML
     void remove(ActionEvent event) {
 
+        //set status label
         status.setText(RequestType.REMOVE.toString());
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
+        //sanity check
         if(spell.isBlank() || spell.isEmpty()){
             status.setText(EMPTY_OR_BLANK_INPUT);
             status.setTextFill(WARNING);
             return;
         }
 
+        //remove
         Request request = RequestCreator.RemoveRequest(spell);
         Client.enqueueRequest(request);
+
+        //handle response
         Platform.runLater( () ->{
             handleRemoveResponse(request);
         });
@@ -243,14 +272,19 @@ public class EditGUIController implements Initializable {
 
     }
 
+    /**
+     * update the word when user press update button
+     * @param event null
+     */
     @FXML
     void update(ActionEvent event) {
 
+        //set status label
         status.setText(RequestType.UPDATE.toString());
         status.setTextFill(WAITING);
 
-        //sanity check
         String spell = searchTestField.getText();
+        //sanity check
         if(spell.isBlank() || spell.isEmpty()){
             status.setText(EMPTY_OR_BLANK_INPUT);
             status.setTextFill(WARNING);
@@ -262,8 +296,12 @@ public class EditGUIController implements Initializable {
             status.setTextFill(WARNING);
             return;
         }
+
+        //update
         Request request = RequestCreator.UpdateRequest(spell,Meaning.listToMeanings(meanings));
         Client.enqueueRequest(request);
+
+        //handle response
         Platform.runLater( () ->{
             handleUpdateAndAddResponse(request);
         });
@@ -294,9 +332,14 @@ public class EditGUIController implements Initializable {
         });
     }
 
+    /**
+     * add the word when user press add button
+     * @param event null
+     */
     @FXML
     void add(ActionEvent event) {
 
+        //set status label
         status.setText(RequestType.ADD.toString());
         status.setTextFill(WAITING);
 
@@ -313,14 +356,22 @@ public class EditGUIController implements Initializable {
             status.setTextFill(WARNING);
             return;
         }
+
+        //send request
         Request request = RequestCreator.AddRequest(spell,Meaning.listToMeanings(meanings));
         Client.enqueueRequest(request);
+
+        //handle response
         Platform.runLater( () ->{
             handleUpdateAndAddResponse(request);
         });
 
     }
 
+    /**
+     * change the scene to search scene
+     * @param event null
+     */
     @FXML
     void toSearchMode(ActionEvent event) {
         Scene scene = SearchGUIController.getScene();
@@ -330,6 +381,10 @@ public class EditGUIController implements Initializable {
         }
     }
 
+    /**
+     * add a row to meaning table
+     * @param event null
+     */
     @FXML
     void addRow(ActionEvent event) {
         //sanity check
@@ -356,6 +411,10 @@ public class EditGUIController implements Initializable {
         meaningTable.getItems().add(new Meaning(POSAddTestField.getText(),meaningAddTestArea.getText()));
     }
 
+    /**
+     * remove the selected row to meaning table
+     * @param event null
+     */
     @FXML
     void removeRow(ActionEvent event) {
         meaningTable.getItems().removeAll(

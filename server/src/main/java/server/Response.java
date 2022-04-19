@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import data.Word;
 import common.enums.Status;
 
+/**
+ * response
+ *
+ * @author lingxiao li 1031146
+ */
 public class Response {
 
     private int logicalTime;

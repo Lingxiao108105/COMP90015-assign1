@@ -14,6 +14,6 @@ module client {
     exports edu.common.utils;
     exports edu.data;
     exports edu.javafx;
-    exports edu.server;
+    exports edu.client;
 
 }
