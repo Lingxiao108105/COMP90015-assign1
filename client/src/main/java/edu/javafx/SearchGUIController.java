@@ -2,27 +2,30 @@ package edu.javafx;
 
 import edu.DictionaryClient;
 import edu.client.*;
+import edu.data.Meaning;
+import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static edu.javafx.StatusConstant.*;
@@ -50,13 +53,13 @@ public class SearchGUIController implements Initializable {
     private TextField searchTestField;
 
     @FXML
-    private TableView<Map.Entry<String, String>> meaningTable;
+    private TableView<Meaning> meaningTable;
 
     @FXML
-    private TableColumn<Map.Entry<String, String>, String> meaningColumn;
+    private TableColumn<Meaning, String> meaningColumn;
 
     @FXML
-    private TableColumn<Map.Entry<String, String>, String> POSColumn;
+    private TableColumn<Meaning, String> POSColumn;
 
     @FXML
     private Label status;
@@ -85,60 +88,12 @@ public class SearchGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         meaningTable.setPlaceholder(
                 new Label("No meaning to display"));
+        meaningTable.editableProperty().set(false);
+        POSColumn.setCellValueFactory(new PropertyValueFactory<Meaning, String>("POS"));
+        POSColumn.setCellFactory(TextAreaTableCell.forTableColumn(new DefaultStringConverter()));
 
-        //adopt from https://stackoverflow.com/questions/18618653/binding-hashmap-with-tableview-javafx
-        POSColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
-                // for first column we use key
-                return new SimpleStringProperty(p.getValue().getKey());
-            }
-        });
-        meaningColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
-                // for second column we use value
-                return new SimpleStringProperty(p.getValue().getValue());
-            }
-        });
-
-        //adopt from https://stackoverflow.com/questions/22732013/javafx-tablecolumn-text-wrapping
-        POSColumn.setCellFactory(param -> {
-            return new TableCell<Map.Entry<String, String>, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        Text text = new Text(item);
-                        text.setStyle("-fx-text-alignment:justify;");
-                        text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
-                        setGraphic(text);
-                    }
-                }
-            };
-        });
-        meaningColumn.setCellFactory(param -> {
-            return new TableCell<Map.Entry<String, String>, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        Text text = new Text(item);
-                        text.setStyle("-fx-text-alignment:justify;");
-                        text.wrappingWidthProperty().bind(getTableColumn().widthProperty().subtract(35));
-                        setGraphic(text);
-                    }
-                }
-            };
-        });
+        meaningColumn.setCellValueFactory(new PropertyValueFactory<Meaning, String>("meaning"));
+        meaningColumn.setCellFactory(TextAreaTableCell.forTableColumn(new DefaultStringConverter()));
     }
 
     /**
@@ -213,7 +168,8 @@ public class SearchGUIController implements Initializable {
                 return;
             }
             HashMap<String,String> meaningMap = response.getWord().getMeanings().getMeaningMap();
-            ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList(meaningMap.entrySet());
+            List<Meaning> meaningList = Meaning.fromMap(meaningMap);
+            ObservableList<Meaning> items = FXCollections.observableArrayList(meaningList);
             meaningTable.setItems(items);
 
         });
