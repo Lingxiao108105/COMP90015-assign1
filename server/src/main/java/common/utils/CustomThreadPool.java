@@ -15,7 +15,11 @@ public class CustomThreadPool {
     private final BlockingQueue<Runnable> queue = new LinkedBlockingDeque<>();
     private final ConcurrentHashMap<Integer,Worker> workers = new ConcurrentHashMap<>();
     private Integer workerId = 1;
-    private final static int maxWorkerCount = 100;
+    private static int maxWorkerCount = 100;
+
+    public static void setMaxWorkerCount(int maxWorkerCount){
+        CustomThreadPool.maxWorkerCount = maxWorkerCount;
+    }
 
     /**
      * create worker if there are tasks in queue
