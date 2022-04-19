@@ -160,7 +160,7 @@ public class SearchGUIController implements Initializable {
     void query(ActionEvent event) {
 
         //set status label
-        status.setText(RequestType.QUERY.toString());
+        status.setText(QUERY);
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
@@ -228,7 +228,7 @@ public class SearchGUIController implements Initializable {
     void remove(ActionEvent event) {
 
         //set status label
-        status.setText(RequestType.REMOVE.toString());
+        status.setText(REMOVE);
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();

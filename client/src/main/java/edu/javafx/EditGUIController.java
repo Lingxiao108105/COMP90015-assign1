@@ -152,7 +152,7 @@ public class EditGUIController implements Initializable {
     void query(ActionEvent event) {
 
         //set status label
-        status.setText(RequestType.QUERY.toString());
+        status.setText(StatusConstant.ADD);
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
@@ -221,7 +221,7 @@ public class EditGUIController implements Initializable {
     void remove(ActionEvent event) {
 
         //set status label
-        status.setText(RequestType.REMOVE.toString());
+        status.setText(REMOVE);
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
@@ -280,7 +280,7 @@ public class EditGUIController implements Initializable {
     void update(ActionEvent event) {
 
         //set status label
-        status.setText(RequestType.UPDATE.toString());
+        status.setText(UPDATE);
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
@@ -340,7 +340,7 @@ public class EditGUIController implements Initializable {
     void add(ActionEvent event) {
 
         //set status label
-        status.setText(RequestType.ADD.toString());
+        status.setText(ADD);
         status.setTextFill(WAITING);
 
         //sanity check

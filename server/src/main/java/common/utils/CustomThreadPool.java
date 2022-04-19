@@ -23,12 +23,12 @@ public class CustomThreadPool {
      * @param task task to excute
      */
     public void execute(Runnable task) {
-        if((queue.size() > 0 && workers.size() < maxWorkerCount) || workers.size() ==0){
+        if(workers.size() < maxWorkerCount){
             Worker worker = new Worker(workerId);
             worker.start();
+            System.out.println("Thread " + Thread.currentThread().getName() + " starts!");
             workers.put(workerId,worker);
             workerId ++;
-
         }
         try {
             queue.put(task);
