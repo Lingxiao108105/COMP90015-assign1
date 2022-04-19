@@ -21,6 +21,19 @@ public class Server {
      * @param args args of main
      */
     public static void start(String[] args){
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+                threadPool.shutDown();
+                this.interrupt();
+                try {
+                    s.close();
+                } catch (IOException e) {
+                    System.out.println("Fail to close ServerSocket!");
+                }
+                System.out.println("ServerSocket is closed");
+            }
+        });
         try {
             //Register server on input port
             Server.s = new ServerSocket(Integer.parseInt(args[0]));
@@ -32,6 +45,7 @@ public class Server {
                 System.out.println("Receive connection from: " + s1.getRemoteSocketAddress().toString());
                 threadPool.execute(new RequestHandler(s1));
             } while (true);
+
 
         }
         catch (Exception e) {

@@ -17,6 +17,7 @@ public class CustomThreadPool {
     private Integer workerId = 1;
     private static int maxWorkerCount = 100;
     private final Object object = new Object();
+    private final WorkerCreator workerCreator = new WorkerCreator();
 
     public static void setMaxWorkerCount(int maxWorkerCount){
         CustomThreadPool.maxWorkerCount = maxWorkerCount;
@@ -26,7 +27,7 @@ public class CustomThreadPool {
      * start the worker creator when start
      */
     public CustomThreadPool() {
-        new WorkerCreator().start();
+        workerCreator.start();
     }
 
     /**
@@ -43,6 +44,16 @@ public class CustomThreadPool {
         synchronized (object){
             object.notifyAll();
         }
+    }
+
+    public void shutDown() {
+        for(Worker worker: workers.values()){
+            worker.interrupt();
+        }
+
+        workerCreator.interrupt();
+
+        System.out.println("All the workers are shut down!");
     }
 
     /**
@@ -64,7 +75,8 @@ public class CustomThreadPool {
                     try {
                         object.wait();
                     } catch (InterruptedException e) {
-                        System.out.println("Worker creator is interrupted!");
+                        System.out.println("WorkerCreator Thread is shutdown!");
+                        return;
                     }
                 }
             }
@@ -87,10 +99,11 @@ public class CustomThreadPool {
 
         @Override
         public void run() {
+            Runnable task = null;
             try{
                 while(!Thread.currentThread().isInterrupted()){
                     //wait 10 second
-                    Runnable task = queue.poll(300, TimeUnit.SECONDS);
+                    task = queue.poll(300, TimeUnit.SECONDS);
                     //not enough task to run
                     if(task == null){
                         System.out.println(Thread.currentThread().getName() + " is interrupted due to timeout!");

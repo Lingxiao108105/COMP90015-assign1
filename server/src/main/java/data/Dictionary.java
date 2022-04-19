@@ -29,7 +29,9 @@ public class Dictionary {
         return dictionary;
     }
 
-
+    public static ConcurrentHashMap<String,Meanings> getMap(){
+        return map;
+    }
     /**
      * query a word in the dictionary
      * @param word word to search
@@ -60,7 +62,7 @@ public class Dictionary {
         synchronized (key) {
             removeEmptyMeaning(word.getMeanings());
             map.put(word.getSpell(),word.getMeanings());
-            LocalSave.getInstance().saveToFile(map);
+            //LocalSave.getInstance().saveToFile(map);
         }
         return Status.SUCCESS;
 
@@ -76,7 +78,7 @@ public class Dictionary {
         synchronized (key) {
             if(map.containsKey(word.getSpell())){
                 map.remove(word.getSpell());
-                LocalSave.getInstance().saveToFile(map);
+                //LocalSave.getInstance().saveToFile(map);
                 return Status.SUCCESS;
             }
         }
@@ -99,7 +101,7 @@ public class Dictionary {
             if(map.containsKey(word.getSpell())){
                 removeEmptyMeaning(word.getMeanings());
                 map.replace(word.getSpell(),word.getMeanings());
-                LocalSave.getInstance().saveToFile(map);
+                //LocalSave.getInstance().saveToFile(map);
                 return Status.SUCCESS;
             }
         }

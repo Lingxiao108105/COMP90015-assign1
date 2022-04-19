@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Application {
     public static void main(String[] args) {
-
         //sanity check
         if(args.length < 2){
             System.out.println("Please enter <server-port> as first argument, <file path> as second argument!");
@@ -39,6 +38,13 @@ public class Application {
             }
         }
 
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+                LocalSave.getInstance().saveToFile(Dictionary.getMap());
+                System.out.println("Dictionary are saved to file.");
+            }
+        });
         //start the server
         Server.start(args);
 
