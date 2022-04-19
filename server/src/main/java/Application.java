@@ -10,7 +10,7 @@ public class Application {
     public static void main(String[] args) {
 
         if(args.length < 2){
-            System.out.println("Please enter <server-address> as first argument, <server-port> as second argument!");
+            System.out.println("Please enter <server-port> as first argument, <file path> as second argument!");
             return;
         }
         //initialize the dictionary

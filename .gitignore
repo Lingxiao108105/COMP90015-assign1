@@ -1,6 +1,6 @@
 demo
 .idea
-dictionary.json
+*.json
 testClient
 client/target
 server/target

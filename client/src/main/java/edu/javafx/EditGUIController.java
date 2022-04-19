@@ -107,7 +107,12 @@ public class EditGUIController implements Initializable {
             @Override
             public void handle(TableColumn.CellEditEvent<Meaning, String> event) {
                 Meaning value = event.getRowValue();
-                value.setPOS(event.getNewValue());
+                String newValue = event.getNewValue();
+                if(newValue.isBlank()){
+                    removeRow(null);
+                }else {
+                    value.setPOS(newValue);
+                }
             }
         });
 
@@ -117,7 +122,12 @@ public class EditGUIController implements Initializable {
             @Override
             public void handle(TableColumn.CellEditEvent<Meaning, String> event) {
                 Meaning value = event.getRowValue();
-                value.setMeaning(event.getNewValue());
+                String newValue = event.getNewValue();
+                if(newValue.isBlank()){
+                    removeRow(null);
+                }else {
+                    value.setMeaning(newValue);
+                }
             }
         });
     }

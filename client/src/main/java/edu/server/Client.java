@@ -4,10 +4,13 @@ import edu.DictionaryClient;
 import edu.common.utils.Json;
 import edu.javafx.ReconnectGUIController;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -146,6 +149,12 @@ public class Client extends Thread {
                     Thread.currentThread().interrupt();
                 }
                 Stage stage = new Stage();
+                stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent windowEvent) {
+                        Platform.exit();
+                    }
+                });
                 stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
