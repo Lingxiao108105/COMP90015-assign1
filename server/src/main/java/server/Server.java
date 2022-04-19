@@ -34,9 +34,9 @@ public class Server {
             } while (true);
 
         }
-        catch (IOException e) {
+        catch (Exception e) {
             System.out.println("Input port is invalid or busy.");
-            e.printStackTrace();
+            //e.printStackTrace();
             System.exit(-1);
         }
     }
