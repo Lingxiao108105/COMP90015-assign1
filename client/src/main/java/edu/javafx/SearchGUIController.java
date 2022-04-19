@@ -164,13 +164,14 @@ public class SearchGUIController implements Initializable {
     void handleQueryResponse(Request request) {
         Platform.runLater( () ->{
             Response response = Client.getResponse(request);
+            //request is out-of-date
+            if(!Client.latest(request)){
+                return;
+            }
+
             //Client did not receive response yet
             if(response == null){
                 handleQueryResponse(request);
-                return;
-            }
-            //response is out-of-date
-            if(!Client.latest(response)){
                 return;
             }
 
@@ -223,13 +224,14 @@ public class SearchGUIController implements Initializable {
     void handleRemoveResponse(Request request) {
         Platform.runLater( () ->{
             Response response = Client.getResponse(request);
-            //Client did not receive response yet
-            if(response == null){
-                handleQueryResponse(request);
+            //request is out-of-date
+            if(!Client.latest(request)){
                 return;
             }
-            //response is out-of-date
-            if(!Client.latest(response)){
+
+            //Client did not receive response yet
+            if(response == null){
+                handleRemoveResponse(request);
                 return;
             }
 

@@ -52,6 +52,7 @@ public class Client extends Thread {
 
     public static void enqueueRequest(Request request){
         try {
+            Client.queue.clear();
             Client.queue.put(request);
         } catch (InterruptedException e) {
             System.out.println("Fail to add request to queue!");
@@ -67,6 +68,11 @@ public class Client extends Thread {
     //check whether the response is latest
     public static Boolean latest(Response response){
         return response.getLogicalTime() == logicalTime;
+    }
+
+    //check whether the request is latest
+    public static Boolean latest(Request request){
+        return request.getLogicalTime() == logicalTime;
     }
 
 
