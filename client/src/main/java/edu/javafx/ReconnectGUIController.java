@@ -54,11 +54,10 @@ public class ReconnectGUIController implements Initializable {
     @FXML
     void connect(ActionEvent event) {
         Client client = DictionaryClient.client;
-        client.interrupt();
-        client = new Client(ip.getText(),Integer.parseInt(port.getText()));
-        client.start();
-        DictionaryClient.client = client;
+        DictionaryClient.client = new Client(ip.getText(),Integer.parseInt(port.getText()));
+        DictionaryClient.client.start();
         ReconnectGUIController.stage.close();
+        client.interrupt();
     }
 
     /**

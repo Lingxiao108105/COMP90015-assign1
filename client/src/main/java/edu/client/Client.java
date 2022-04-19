@@ -92,7 +92,7 @@ public class Client extends Thread {
      */
     @Override
     public void run() {
-
+        System.out.println(Thread.currentThread().getName() + " starts! ");
         //try to open socket
         try {
             this.s1 = new Socket(ip ,port);
@@ -148,9 +148,9 @@ public class Client extends Thread {
                 responseMap.put(request,response);
 
             } catch (Exception e) {
-                //e.printStackTrace();
                 closeSocket(s1,inputStream,outputStream);
                 connectToNewServer();
+                System.out.println(Thread.currentThread().getName() + " is stop! ");
                 return;
             }
         }

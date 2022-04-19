@@ -3,8 +3,11 @@ package edu;
 import edu.javafx.SearchGUIController;
 import edu.client.Client;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.List;
 
@@ -40,6 +43,12 @@ public class DictionaryClient extends Application {
         //show search scene
         Scene scene = SearchGUIController.getScene();
         stage.setTitle("Dictionary");
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                Platform.exit();
+            }
+        });
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
