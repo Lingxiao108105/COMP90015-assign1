@@ -16,9 +16,17 @@ public class CustomThreadPool {
     private final ConcurrentHashMap<Integer,Worker> workers = new ConcurrentHashMap<>();
     private Integer workerId = 1;
     private static int maxWorkerCount = 100;
+    private final Object object = new Object();
 
     public static void setMaxWorkerCount(int maxWorkerCount){
         CustomThreadPool.maxWorkerCount = maxWorkerCount;
+    }
+
+    /**
+     * start the worker creator when start
+     */
+    public CustomThreadPool() {
+        new WorkerCreator().start();
     }
 
     /**
@@ -27,17 +35,39 @@ public class CustomThreadPool {
      * @param task task to excute
      */
     public void execute(Runnable task) {
-        if(workers.size() < maxWorkerCount){
-            Worker worker = new Worker(workerId);
-            worker.start();
-            System.out.println("Thread " + Thread.currentThread().getName() + " starts!");
-            workers.put(workerId,worker);
-            workerId ++;
-        }
         try {
             queue.put(task);
         } catch (InterruptedException e) {
             System.out.println("Fail to add task" + task.toString());
+        }
+        synchronized (object){
+            object.notifyAll();
+        }
+    }
+
+    /**
+     * create worker
+     */
+    private class WorkerCreator extends Thread{
+
+        @Override
+        public void run() {
+            while (true) {
+                if (workers.isEmpty() || (!queue.isEmpty() && workers.size() < maxWorkerCount)) {
+                    Worker worker = new Worker(workerId);
+                    worker.start();
+                    System.out.println("Thread " + Thread.currentThread().getName() + " starts!");
+                    workers.put(workerId, worker);
+                    workerId++;
+                }
+                synchronized (object) {
+                    try {
+                        object.wait();
+                    } catch (InterruptedException e) {
+                        System.out.println("Worker creator is interrupted!");
+                    }
+                }
+            }
         }
     }
 
@@ -60,7 +90,7 @@ public class CustomThreadPool {
             try{
                 while(!Thread.currentThread().isInterrupted()){
                     //wait 10 second
-                    Runnable task = queue.poll(10, TimeUnit.SECONDS);
+                    Runnable task = queue.poll(300, TimeUnit.SECONDS);
                     //not enough task to run
                     if(task == null){
                         System.out.println(Thread.currentThread().getName() + " is interrupted due to timeout!");
