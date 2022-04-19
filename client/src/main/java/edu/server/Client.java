@@ -155,6 +155,7 @@ public class Client extends Thread {
                         Platform.exit();
                     }
                 });
+                stage.setResizable(false);
                 stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
