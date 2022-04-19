@@ -152,7 +152,7 @@ public class EditGUIController implements Initializable {
     void query(ActionEvent event) {
 
         //set status label
-        status.setText(StatusConstant.ADD);
+        status.setText(QUERY);
         status.setTextFill(WAITING);
 
         String spell = searchTestField.getText();
